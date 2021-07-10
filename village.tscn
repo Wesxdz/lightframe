@@ -1,0 +1,162 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://grid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://standard_wall_module.tscn" type="PackedScene" id=2]
+[ext_resource path="res://LightTest.gd" type="Script" id=3]
+[ext_resource path="res://sketch.png" type="Texture" id=4]
+[ext_resource path="res://FPS.gd" type="Script" id=5]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 100, 1, 100 )
+
+[sub_resource type="PhysicsMaterial" id=2]
+friction = 0.0
+
+[sub_resource type="CapsuleShape" id=3]
+radius = 0.3
+
+[sub_resource type="CapsuleMesh" id=4]
+radius = 0.3
+
+[sub_resource type="Environment" id=5]
+background_mode = 1
+background_color = Color( 0.298039, 0.298039, 0.298039, 1 )
+ambient_light_color = Color( 1, 1, 1, 1 )
+fog_color = Color( 1, 1, 1, 1 )
+ss_reflections_enabled = true
+ssao_enabled = true
+dof_blur_far_distance = 4.0
+dof_blur_far_transition = 24.0
+dof_blur_far_quality = 2
+
+[sub_resource type="Animation" id=6]
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimationPlayer/HUD:box")
+tracks/0/interp = 0
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 32, 32 ), Vector2( 34, 34 ), Vector2( 36, 36 ), Vector2( 34, 34 ), Vector2( 32, 32 ) ]
+}
+
+[sub_resource type="CanvasItemMaterial" id=7]
+blend_mode = 1
+
+[node name="root" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.199898, -0.0420737, 0.0649543 )
+
+[node name="grid" parent="." instance=ExtResource( 1 )]
+
+[node name="StaticBody" type="StaticBody" parent="grid"]
+
+[node name="CollisionShape" type="CollisionShape" parent="grid/StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.115413, 0 )
+shape = SubResource( 1 )
+
+[node name="standard_wood_frame" parent="." instance=ExtResource( 2 )]
+
+[node name="sun" type="DirectionalLight" parent="."]
+transform = Transform( 0.714387, -0.593737, 0.370307, 0.181677, 0.668428, 0.721247, -0.675755, -0.447973, 0.585385, 0, 3.39554, -2.30919 )
+light_energy = 0.7
+shadow_enabled = true
+
+[node name="spectator" type="RigidBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.98066, 5.94603 )
+mass = 5.0
+physics_material_override = SubResource( 2 )
+gravity_scale = 0.0
+continuous_cd = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+linear_damp = 5.0
+
+[node name="CollisionShape" type="CollisionShape" parent="spectator"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+shape = SubResource( 3 )
+
+[node name="CSGMesh" type="CSGMesh" parent="spectator"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+mesh = SubResource( 4 )
+
+[node name="camera" type="Camera" parent="spectator"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.546878, 0 )
+
+[node name="env" type="WorldEnvironment" parent="."]
+environment = SubResource( 5 )
+
+[node name="GIProbe" type="GIProbe" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Pulse"
+playback_speed = 0.5
+anims/Pulse = SubResource( 6 )
+
+[node name="HUD" type="Control" parent="AnimationPlayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+strand = 10.487
+thicc = 1.5
+
+[node name="TextureRect" type="TextureRect" parent="AnimationPlayer/HUD"]
+visible = false
+material = SubResource( 7 )
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -12.0
+margin_top = -12.0
+margin_right = 12.0
+margin_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AnimationPlayer/HUD"]
+anchor_left = 0.5
+anchor_right = 0.582
+margin_left = -14.2953
+margin_top = 12.193
+margin_right = -12.2633
+margin_bottom = 52.193
+grow_horizontal = 2
+rect_pivot_offset = Vector2( -114.402, 40 )
+size_flags_horizontal = 3
+text = "$100"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="AnimationPlayer/HUD"]
+anchor_left = 0.5
+anchor_right = 0.582
+margin_left = -1.79529
+margin_top = 32.693
+margin_right = 0.236694
+margin_bottom = 72.693
+grow_horizontal = 2
+rect_pivot_offset = Vector2( -114.402, 40 )
+size_flags_horizontal = 3
+text = "1 module
+12 parts"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPS" type="Node" parent="."]
+script = ExtResource( 5 )
+move_speed = 10000.0
