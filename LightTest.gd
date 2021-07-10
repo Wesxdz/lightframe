@@ -1,4 +1,3 @@
-tool
 extends Control
 
 
@@ -6,16 +5,25 @@ extends Control
 # var a = 2
 # var b = "text"
 export var box = Vector2(32, 32) # box size in pixels
-export var strand = 12.0 # individual line perimeter
+export var strand = 8.0 # individual line perimeter
 export var thicc = 2.0 # frame line width
+var strand_goal = 0.0
+export var strand_diff = 8.0
+export var strand_growth_rate = 1.0
+export var strand_curve : Curve
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	strand_goal = strand
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if strand < strand_goal:
+		strand = min(strand_goal, strand + strand_growth_rate * delta * strand_curve.interpolate_baked((strand_goal - strand)/strand_diff))
+	elif strand > strand_goal:
+		strand = max(strand_goal, strand - strand_growth_rate * delta * strand_curve.interpolate_baked((strand - strand_goal)/strand_diff))
 	update()
 	
 func _draw():
@@ -35,3 +43,11 @@ func _draw():
 	var lower_right = upper_left + box
 	draw_line(lower_right, lower_right - Vector2(strand, 0), Color(255, 255, 255), thicc, true)
 	draw_line(lower_right, lower_right - Vector2(0, strand), Color(255, 255, 255), thicc, true)
+
+func _input(event):
+	if event is InputEventMouseButton:
+		print(event.button_index)
+		if event.pressed:
+			strand_goal += strand_diff
+		else:
+			strand_goal -= strand_diff
