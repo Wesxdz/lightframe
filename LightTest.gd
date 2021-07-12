@@ -47,7 +47,6 @@ func _draw():
 
 func _input(event):
 	if event is InputEventMouseButton:
-		print(event.button_index)
 		if event.pressed:
 			strand_goal += strand_diff
 		else:

@@ -23,21 +23,26 @@ func _physics_process(delta):
 
 func _input(event):
 	if event is InputEventKey:
-		if event.scancode == KEY_ESCAPE:
-			get_tree().quit()
-		if event.scancode == KEY_SPACE:
-			OS.set_window_fullscreen(!OS.window_fullscreen)
-		if event.scancode == KEY_TAB:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		if not event.echo:
-			if event.scancode == KEY_W:
-				move_vector += Vector3.FORWARD * (-1 + 2 * float(event.pressed))
-			if event.scancode == KEY_S:
-				move_vector += 0.5 * Vector3.BACK * (-1 + 2 * float(event.pressed))
-			if event.scancode == KEY_D:
-				move_vector += Vector3.RIGHT * (-1 + 2 * float(event.pressed))
-			if event.scancode == KEY_A:
-				move_vector += 0.5 * Vector3.LEFT * (-1 + 2 * float(event.pressed))
-	if event is InputEventMouseMotion:
-		camera.rotate_y(-event.relative.x/get_viewport().size.x * x_motion)
-		camera.rotate_object_local(-Vector3(1.0, 0.0, 0.0), event.relative.y/get_viewport().size.y * y_motion)
+		if event.scancode == KEY_TAB and event.pressed:
+			if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			else:
+				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		if event is InputEventKey:
+			if event.scancode == KEY_ESCAPE:
+				get_tree().quit()
+			if event.scancode == KEY_SPACE:
+				OS.set_window_fullscreen(!OS.window_fullscreen)
+			if not event.echo:
+				if event.scancode == KEY_W:
+					move_vector += Vector3.FORWARD * (-1 + 2 * float(event.pressed))
+				if event.scancode == KEY_S:
+					move_vector += 0.5 * Vector3.BACK * (-1 + 2 * float(event.pressed))
+				if event.scancode == KEY_D:
+					move_vector += Vector3.RIGHT * (-1 + 2 * float(event.pressed))
+				if event.scancode == KEY_A:
+					move_vector += 0.5 * Vector3.LEFT * (-1 + 2 * float(event.pressed))
+		if event is InputEventMouseMotion:
+			camera.rotate_y(-event.relative.x/get_viewport().size.x * x_motion)
+			camera.rotate_object_local(-Vector3(1.0, 0.0, 0.0), event.relative.y/get_viewport().size.y * y_motion)

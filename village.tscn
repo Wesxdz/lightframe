@@ -1,7 +1,6 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://grid.tscn" type="PackedScene" id=1]
-[ext_resource path="res://module.glb" type="PackedScene" id=2]
 [ext_resource path="res://LightTest.gd" type="Script" id=3]
 [ext_resource path="res://sketch.png" type="Texture" id=4]
 [ext_resource path="res://FPS.gd" type="Script" id=5]
@@ -184,9 +183,6 @@ grid_path = NodePath("../active_grid")
 [node name="FPS" type="Node" parent="."]
 script = ExtResource( 5 )
 move_speed = 10000.0
-
-[node name="module" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.455157 )
 
 [node name="active_grid" type="CSGMesh" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0 )
