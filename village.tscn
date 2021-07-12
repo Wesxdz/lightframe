@@ -1,13 +1,15 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://grid.tscn" type="PackedScene" id=1]
-[ext_resource path="res://standard_wall_module.tscn" type="PackedScene" id=2]
+[ext_resource path="res://module.glb" type="PackedScene" id=2]
 [ext_resource path="res://LightTest.gd" type="Script" id=3]
 [ext_resource path="res://sketch.png" type="Texture" id=4]
 [ext_resource path="res://FPS.gd" type="Script" id=5]
+[ext_resource path="res://active_grid.gd" type="Script" id=6]
+[ext_resource path="res://module_placer.gd" type="Script" id=7]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 100, 1, 100 )
+extents = Vector3( 50, 1, 50 )
 
 [sub_resource type="PhysicsMaterial" id=2]
 friction = 0.0
@@ -45,24 +47,31 @@ tracks/0/keys = {
 "values": [ Vector2( 32, 32 ), Vector2( 34, 34 ), Vector2( 36, 36 ), Vector2( 34, 34 ), Vector2( 32, 32 ) ]
 }
 
-[sub_resource type="Curve" id=8]
+[sub_resource type="Curve" id=7]
 _data = [ Vector2( 0, 0.436364 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 2.91891, 0.0, 0, 0 ]
 
-[sub_resource type="CanvasItemMaterial" id=7]
+[sub_resource type="CanvasItemMaterial" id=8]
 blend_mode = 1
+
+[sub_resource type="PlaneMesh" id=9]
+size = Vector2( 1.219, 1.219 )
+
+[sub_resource type="SpatialMaterial" id=10]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0.172549, 0, 1, 0.521569 )
 
 [node name="root" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.199898, -0.0420737, 0.0649543 )
 
 [node name="grid" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0118976, 0.00921106, 0.00826919 )
 
 [node name="StaticBody" type="StaticBody" parent="grid"]
 
 [node name="CollisionShape" type="CollisionShape" parent="grid/StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.115413, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204942, 0 )
 shape = SubResource( 1 )
-
-[node name="standard_wood_frame" parent="." instance=ExtResource( 2 )]
 
 [node name="sun" type="DirectionalLight" parent="."]
 transform = Transform( 0.714387, -0.593737, 0.370307, 0.181677, 0.668428, 0.721247, -0.675755, -0.447973, 0.585385, 0, 3.39554, -2.30919 )
@@ -70,7 +79,7 @@ light_energy = 0.7
 shadow_enabled = true
 
 [node name="spectator" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.98066, 5.94603 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.354, 0 )
 mass = 5.0
 physics_material_override = SubResource( 2 )
 gravity_scale = 0.0
@@ -86,10 +95,17 @@ shape = SubResource( 3 )
 
 [node name="CSGMesh" type="CSGMesh" parent="spectator"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+visible = false
 mesh = SubResource( 4 )
 
 [node name="camera" type="Camera" parent="spectator"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.546878, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.264368, 0 )
+fov = 90.0
+
+[node name="raycast" type="RayCast" parent="spectator/camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.636116, 0 )
+enabled = true
+cast_to = Vector3( 0, 0, -10 )
 
 [node name="env" type="WorldEnvironment" parent="."]
 environment = SubResource( 5 )
@@ -108,14 +124,13 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-strand = 8.0
 thicc = 1.5
 strand_growth_rate = 150.0
-strand_curve = SubResource( 8 )
+strand_curve = SubResource( 7 )
 
 [node name="TextureRect" type="TextureRect" parent="AnimationPlayer/HUD"]
 visible = false
-material = SubResource( 7 )
+material = SubResource( 8 )
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -162,6 +177,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="module_placer" type="Node" parent="."]
+script = ExtResource( 7 )
+grid_path = NodePath("../active_grid")
+
 [node name="FPS" type="Node" parent="."]
 script = ExtResource( 5 )
 move_speed = 10000.0
+
+[node name="module" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.455157 )
+
+[node name="active_grid" type="CSGMesh" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0 )
+mesh = SubResource( 9 )
+material = SubResource( 10 )
+script = ExtResource( 6 )
+raycast_path = NodePath("../spectator/camera/raycast")
+
+[node name="build" type="Spatial" parent="."]

@@ -39,5 +39,5 @@ func _input(event):
 			if event.scancode == KEY_A:
 				move_vector += 0.5 * Vector3.LEFT * (-1 + 2 * float(event.pressed))
 	if event is InputEventMouseMotion:
-		camera.rotate_y(-event.relative.x/OS.get_window_safe_area().size.x * x_motion)
-		camera.rotate_object_local(-Vector3(1.0, 0.0, 0.0), event.relative.y/OS.get_window_safe_area().size.y * y_motion)
+		camera.rotate_y(-event.relative.x/get_viewport().size.x * x_motion)
+		camera.rotate_object_local(-Vector3(1.0, 0.0, 0.0), event.relative.y/get_viewport().size.y * y_motion)

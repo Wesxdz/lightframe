@@ -27,8 +27,9 @@ func _process(delta):
 	update()
 	
 func _draw():
-	var rect = OS.get_window_safe_area()
-	var upper_left = Vector2(rect.position.x + rect.size.x/2 - box.x/2,rect.position.y + rect.size.y/2 - box.y/2);
+	var rect = get_viewport()
+	draw_circle(rect.size/2.0, 4.0, Color.whitesmoke)
+	var upper_left = Vector2(rect.size.x/2 - box.x/2, rect.size.y/2 - box.y/2);
 	draw_line(upper_left, upper_left + Vector2(strand, 0), Color(255, 255, 255), thicc, true)
 	draw_line(upper_left, upper_left + Vector2(0, strand), Color(255, 255, 255), thicc, true)
 	
